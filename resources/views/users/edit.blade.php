@@ -21,7 +21,10 @@
             </div>
             <br>
             <label for="username">Username</label>
-            <input value="{{$user->username}}" disabled class="form-control" placeholder="username" type="text" name="username" id="username"/>
+            <input value="{{old('username') ? old('username') : $user->username}}" disabled class="form-control {{$errors->first('name') ? "is-invalid" : ""}}" placeholder="username" type="text" name="username" id="username"/>
+            <div class="invalid-feedback">
+                {{$errors->first('username')}}
+            </div>
             <br>
             <label for="">Status</label>
             <br/>

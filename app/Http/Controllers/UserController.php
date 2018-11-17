@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\User;
 use function Couchbase\defaultDecoder;
+use Illuminate\Support\Facades\Storage;
 use Validator;
 use Illuminate\Http\Request;
 
@@ -55,9 +56,10 @@ class UserController extends Controller
         $request->validated();
         $datas = $request->all();
         if ($request->file('avatar')) {
-            $file = $request
-                ->file('avatar')
-                ->store('avatars', 'public');
+            $file = Storage::disk('public')->put('avatars',$request->avatar);
+//            $file = $request
+//                ->file('avatar')
+//                ->store('avatars', 'public');
             $datas['avatar'] = $file;
         }
         User::create($datas);

@@ -13,9 +13,12 @@
 
         <form enctype="multipart/form-data" class="bg-white shadow-sm p-3" action="{{route('users.update', ['id'=>$user->id])}}" method="POST">
             @csrf
-            <input type="hidden" value="PUT" name="_method">
+            @method('PUT')
             <label for="name">Name</label>
-            <input value="{{$user->name}}" class="form-control" placeholder="Full Name" type="text" name="name" id="name"/>
+            <input value="{{old('name') ? old('name') : $user->name}}" class="form-control {{$errors->first('name') ? "is-invalid" : ""}}" placeholder="Full Name" type="text" name="name" id="name"/>
+            <div class="invalid-feedback">
+                {{$errors->first('name')}}
+            </div>
             <br>
             <label for="username">Username</label>
             <input value="{{$user->username}}" disabled class="form-control" placeholder="username" type="text" name="username" id="username"/>

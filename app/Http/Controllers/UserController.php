@@ -51,21 +51,26 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
-        $request->validated();
+        $validasidata = $request->validate([
+            "name" => "required|min:5|max:100",
+            "username" => "required|min:5|max:30",
+            "roles" => "required",
+            "phone" => "required|digits_between:10,12",
+            "address" => "required|min:20|max:200",
+            "email" => "required|email",
+            "password" => "required",
+            "password_confirmation" => "required|same:password"
+        ]);
         $datas = $request->all();
         if ($request->file('avatar')) {
             $file = Storage::disk('public')->put('avatars',$request->avatar);
-//            $file = $request
-//                ->file('avatar')
-//                ->store('avatars', 'public');
             $datas['avatar'] = $file;
         }
         User::create($datas);
         return redirect()->route('users.create')->with('status', 'User successfully created');
     }
-
     /**
      * Display the specified resource.
      *
@@ -97,13 +102,16 @@ class UserController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $request->validated();
+        $validasidata = $request->validate([
+            "name" => "required|min:5|max:100",
+            "roles" => "required",
+            "phone" => "required|digits_between:10,12",
+            "address" => "required|min:20|max:200"
+        ]);
         $user = \App\User::findOrFail($id);
-
         $datas = $request->all();
-
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar')->store('avatars', 'public');
             $datas['avatar'] = $file;

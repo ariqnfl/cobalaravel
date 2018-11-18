@@ -20,7 +20,7 @@ class CategoryController extends Controller
         if ($filterKeyword) {
             $categories = \App\Category::where("name", "LIKE", "%$filterKeyword%")->paginate(5);
         }
-        return view('categories.index', ['categories' => $categories]);
+        return view('categories.index', compact('categories'));
     }
 
     /**
@@ -64,7 +64,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         $category = \App\Category::findOrFail($id);
-        return view('categories.show', ['category' => $category]);
+        return view('categories.show', compact('category'));
 
     }
 
@@ -76,9 +76,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category_to_edit = \App\Category::findOrFail($id);
+        $category = \App\Category::findOrFail($id);
 
-        return view('categories.edit', ['category' => $category_to_edit]);
+        return view('categories.edit', compact('category'));
     }
 
     /**
@@ -117,7 +117,7 @@ class CategoryController extends Controller
 //        $category->updated_by = \Auth::user()->id;
 //        $category->slug = str_slug($name);
 //        $category->save();
-        return redirect()->route('categories.edit', ['id' => $id]);
+        return redirect()->route('categories.edit', compact('id'));
     }
 
     /**
@@ -134,9 +134,9 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('status','Category successfully moved into trash');
     }
     public function trash(){
-        $deleted_category = \App\Category::onlyTrashed()->paginate(4);
+        $categories = \App\Category::onlyTrashed()->paginate(4);
 
-        return view('categories.trash',['categories'=> $deleted_category]);
+        return view('categories.trash',compact('categories'));
     }
     public function restore($id){
         $category = \App\Category::withTrashed()->findOrFail($id);

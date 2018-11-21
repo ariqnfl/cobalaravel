@@ -13,14 +13,14 @@
             </form>
         </div>
         <div class="col-md-6">
-            <ul class="nav nav-pills card-header-pills">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{route('categories.index')}}">Published</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('categories.trash')}}">Trash</a>
-                </li>
-            </ul>
+                <ul class="nav nav-pills card-header-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{route('categories.index')}}">Published</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('categories.trash')}}">Trash</a>
+                    </li>
+                </ul>
         </div>
     </div>
     <hr class="my-3">

@@ -22,7 +22,7 @@ class BookController extends Controller
         }else{
             $books = \App\Book::with('categories')->where('title','LIKE',"%$keyword%")->paginate(4);
         }
-        return view('books.index',['books'=>$books]);
+        return view('books.index',compact('books'));
     }
 
     /**
@@ -85,7 +85,7 @@ class BookController extends Controller
     public function edit($id)
     {
         $book = \App\Book::findOrFail($id);
-        return view('books.edit',['book'=> $book]);
+        return view('books.edit',compact('book'));
     }
 
     /**
@@ -123,7 +123,7 @@ class BookController extends Controller
     }
     public function trash(){
         $books = \App\Book::onlyTrashed()->paginate(4);
-        return view('books.trash',['books'=> $books]);
+        return view('books.trash',compact('books'));
     }
     public function restore($id){
         $book = \App\Book::withTrashed()->findOrFail($id);
@@ -139,7 +139,7 @@ class BookController extends Controller
         if (!$book->trashed()){
             return redirect()->route('books.trash')->with('status', 'Book is not in trash!')->with('status_type','alert');
         }else{
-            $book->catergories()->detach();
+            $book->categories()->detach();
             $book->forceDelete();
             return redirect()->route('books.trash')->with('status','Book Permanently Deleted');
         }

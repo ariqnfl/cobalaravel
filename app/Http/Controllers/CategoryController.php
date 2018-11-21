@@ -15,10 +15,10 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = \App\Category::paginate(5);
+        $categories = Category::paginate(5);
         $filterKeyword = $request->get('name');
         if ($filterKeyword) {
-            $categories = \App\Category::where("name", "LIKE", "%$filterKeyword%")->paginate(5);
+            $categories = Category::where("name", "LIKE", "%$filterKeyword%")->paginate(5);
         }
         return view('categories.index', compact('categories'));
     }
@@ -63,7 +63,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = \App\Category::findOrFail($id);
+        $category = Category::findOrFail($id);
         return view('categories.show', compact('category'));
 
     }
@@ -76,7 +76,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = \App\Category::findOrFail($id);
+        $category = Category::findOrFail($id);
 
         return view('categories.edit', compact('category'));
     }
@@ -90,7 +90,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $category = \App\Category::findOrFail($id);
+        $category = Category::findOrFail($id);
         $datas = $request->all();
         $datas['slug'] = $request->name;
         if ($request->hasFile('image')) {
@@ -100,23 +100,6 @@ class CategoryController extends Controller
         }
         $category->update($datas);
 
-//        $name = $request->get('name');
-//        $slug = $request->get('slug');
-//
-//        $category = \App\Category::findOrFail($id);
-//        $category->name = $name;
-//        $category->slug = $slug;
-//
-//        if ($request->file('image')){
-//            if ($category->image && file_exists(storage_path('app/public/'.$category->image))){
-//                \Storage::delete('public/'.$category->name);
-//            }
-//            $new_image = $request->file('image')->store('category_images','public');
-//            $category->image = $new_image;
-//        }
-//        $category->updated_by = \Auth::user()->id;
-//        $category->slug = str_slug($name);
-//        $category->save();
         return redirect()->route('categories.edit', compact('id'));
     }
 
@@ -128,44 +111,52 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = \App\Category::findOrFail($id);
+        $category = Category::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('categories.index')->with('status','Category successfully moved into trash');
+        return redirect()->route('categories.index')->with('status', 'Category successfully moved into trash');
     }
-    public function trash(){
-        $categories = \App\Category::onlyTrashed()->paginate(4);
 
-        return view('categories.trash',compact('categories'));
+    public function trash()
+    {
+        $categories = Category::onlyTrashed()->paginate(4);
+
+        return view('categories.trash', compact('categories'));
     }
-    public function restore($id){
-        $category = \App\Category::withTrashed()->findOrFail($id);
 
-        if ($category->trashed()){
+    public function restore($id)
+    {
+        $category = Category::withTrashed()->findOrFail($id);
+
+        if ($category->trashed()) {
             $category->restore();
-        }else{
-            return redirect()->route('categories.index')->with('status','Category is not in trash');
+        } else {
+            return redirect()->route('categories.index')->with('status', 'Category is not in trash');
         }
-        return redirect()->route('categories.index')->with('status','Category successfully restored');
+        return redirect()->route('categories.index')->with('status', 'Category successfully restored');
 
     }
-    public function deletePermanent($id){
-        $category = \App\Category::withTrashed()->findOrFail($id);
 
-        if (!$category->trashed()){
+    public function deletePermanent($id)
+    {
+        $category = Category::withTrashed()->findOrFail($id);
+
+        if (!$category->trashed()) {
             return redirect()->route('categories.index')
-                ->with('status','Can not delete permanent active category');
-        }else{
+                ->with('status', 'Can not delete permanent active category');
+        } else {
             $category->forceDelete();
             return redirect()->route('categories.index')
-                ->with('status','Category permanently deleted');
+                ->with('status', 'Category permanently deleted');
         }
 
 
     }
-    public function ajaxSearch(Request $request){
+
+    public function ajaxSearch(Request $request)
+    {
         $keyword = $request->get('q');
-        $categories = \App\Category::where("name","LIKE","%$keyword%")->get();
+        $categories = Category::where("name", "LIKE", "%$keyword%")->get();
         return $categories;
     }
 }

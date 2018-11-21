@@ -2,7 +2,7 @@
 
 namespace App;
 
-use http\Env\Request;
+use     http\Env\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
